@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<!-- Hero Section -->
+
+
+<div class="hero-section text-white d-flex flex-column align-items-center justify-content-center">
+  <img src="{{ url_for('static', filename='images/hayats-logo-1.png') }}" alt="Hayat's Bijoux Logo" class="hero-logo mb-3">
+  
+  {% if not current_user.is_authenticated %}
+    <a href="{{ url_for('auth.sign_up') }}" class="btn hero-cta mt-3">
+      Sign Up
+    </a>
+  {% endif %}
+  
+  <h1 class="hero-title">Elegant Jewelry, Handcrafted with Passion</h1>
+  <p class="hero-subtitle">Discover unique pieces that speak to your soul.</p>
+</div>
+
+
+<!-- Category Cards Section -->
+<div class="container-fluid px-0">
+  <div class="row no-gutters">
+    <!-- Earrings -->
+    <div class="col-6 col-md-3">
+      <a href="/products/Earrings" class="category-link">
+        <div class="category-card">
+          <img src="/static/images/Earrings.jpg" class="img-fluid" alt="Earrings">
+          <div class="category-overlay">
+            <h4 class="category-name">Earrings</h4>
+            <span class="shop-now">Shop Now →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Rings -->
+    <div class="col-6 col-md-3">
+      <a href="/products/Rings" class="category-link">
+        <div class="category-card">
+          <img src="/static/images/Rings.jpg" class="img-fluid" alt="Rings">
+          <div class="category-overlay">
+            <h4 class="category-name">Rings</h4>
+            <span class="shop-now">Shop Now →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Necklaces -->
+    <div class="col-6 col-md-3">
+      <a href="/products/Necklace" class="category-link">
+        <div class="category-card">
+          <img src="/static/images/Necklaces.jpg" class="img-fluid" alt="Necklaces">
+          <div class="category-overlay">
+            <h4 class="category-name">Necklaces</h4>
+            <span class="shop-now">Shop Now →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Bracelets -->
+    <div class="col-6 col-md-3">
+      <a href="/products/Bracelets" class="category-link">
+        <div class="category-card">
+          <img src="/static/images/bracelet_homemade.jpg" class="img-fluid" alt="Bracelets">
+          <div class="category-overlay">
+            <h4 class="category-name">Bracelets & Artisan Goods</h4>
+            <span class="shop-now">Shop Now →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Product Cards Section -->
+<div class="container-fluid px-0 mt-5">
+  <div class="row no-gutters">
+    {% for product in new_arrivals %}
+    <div class="col-6 col-md-3">
+      <a href="/product/{{ product.id }}" class="product-link">
+        <div class="product-card">
+          <img src="/static/uploads/{{ product.product_picture }}" class="img-fluid" alt="{{ product.product_name }}">
+          <div class="product-overlay">
+            <h5 class="product-name">{{ product.product_name }}</h5>
+            <p class="product-price">${{ '%.2f'|format(product.price) }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}

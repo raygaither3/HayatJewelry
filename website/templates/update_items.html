@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %} Update Product {% endblock %}
+
+{% block body %}
+<div class="container mt-5 text-dark">
+  <h2 class="mb-4 text-center">Update Product</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <!-- Product Name -->
+    <div class="form-group mb-3">
+      {{ form.product_name.label(class="form-label") }}
+      {{ form.product_name(class="form-control", value=item.product_name) }}
+    </div>
+
+    <!-- Price / Sale Price -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          {{ form.price.label(class="form-label") }}
+          {{ form.price(class="form-control", value=item.price) }}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          {{ form.sale_price.label(class="form-label") }}
+          {{ form.sale_price(class="form-control", value=item.sale_price) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group mb-3">
+      {{ form.description.label(class="form-label") }}
+      {{ form.description(class="form-control", rows=4) }}{# WTForms will auto-populate #}
+    </div>
+
+    <!-- Category -->
+    <div class="form-group mb-3">
+      {{ form.category.label(class="form-label") }}
+      {{ form.category(class="form-control", value=item.category) }}
+    </div>
+
+    <!-- Quantity -->
+    <div class="form-group mb-3">
+      {{ form.quantity.label(class="form-label") }}
+      {{ form.quantity(class="form-control", value=item.quantity) }}
+    </div>
+
+    <!-- Upload New Main Image -->
+    <div class="form-group mb-4">
+      <label class="form-label">Upload New Main Image</label>
+      <input type="file" name="product_picture" class="form-control" accept="image/*">
+    </div>
+
+    <div class="text-center mb-5">
+      <button type="submit" class="btn btn-danger">Update Product</button>
+    </div>
+  </form>
+
+  <hr style="border-color: silver;">
+
+  <!-- Current Images Gallery -->
+  <h4 class="mb-3 text-center">Current Images</h4>
+  <div class="row">
+    {% for img in item.images %}
+      <div class="col-md-3 mb-4">
+        <div class="card bg-light text-dark border-danger">
+          <img
+            src="{{ url_for('static', filename='uploads/' ~ img.image_url) }}"
+            class="card-img-top"
+            style="height:150px; object-fit:cover;"
+            alt="Product Image">
+          <div class="card-body p-2 text-center">
+            <form method="POST"
+                  action="{{ url_for('admin.delete_product_image', image_id=img.id) }}">
+              {{ csrf_token() }}
+              <button type="submit" class="btn btn-outline-danger btn-sm">
+                Delete
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center text-muted w-100">No images uploaded yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

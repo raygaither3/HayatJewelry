@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Add Shop Items{% endblock %}
+{% block body %}
+<div class="auth-wrapper">
+  <div class="auth-container">
+    <h2>Add a New Product</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+
+      <label>Product Name</label>
+      {{ form.product_name(class="form-input") }}
+
+      <label>Price</label>
+      {{ form.price(class="form-input") }}
+
+      <label>Sale Price</label>
+      {{ form.sale_price(class="form-input") }}
+
+      <label>Description</label>
+      {{ form.description(class="form-input") }}
+
+
+      <label>Product Images</label>
+      {{ form.product_images(class="form-input", multiple=true) }}
+
+      <label>Category</label>
+      {{ form.category(class="form-input") }}
+
+      <label>Quantity</label>
+      {{ form.quantity(class="form-input") }}
+
+      {{ form.submit(class="btn-submit") }}
+    </form>
+  </div>
+</div>
+{% endblock %}

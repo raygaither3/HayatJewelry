@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Custom Styles -->
+    
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    {{ bootstrap.load_css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mystyles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='hb_favicon_black_circle.ico') }}" type="image/x-icon">
+    <title>Hayat's Bijoux | {% block title %} {% endblock %}</title>
+</head>
+
+<body style="background-color: white;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top rounded shadow-sm px-3 py-2">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img src="{{ url_for('static', filename='images/hayats-logo-b.png') }}" alt="Hayat's Bijoux" class="navbar-logo">
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09"
+        aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExample09">
+        <!-- Left Side: Categories -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          {% if current_user.is_authenticated and current_user.id == 1 %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin.admin_page') }}">Admin Dashboard</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/products/Earrings">Earrings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/products/Rings">Rings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/products/Necklace">Necklaces</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/products/Bracelets">Bracelets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/products/Collections">Collections</a>
+          </li>
+        </ul>
+
+        <!-- Right Side: Cart, Dropdown, Search -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-2">
+          <li class="nav-item">
+            <a href="/cart" class="btn btn-outline-dark position-relative d-flex align-items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
+              </svg>
+              <span>Cart</span>
+          
+              {% if cart | length > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ cart | length }}
+              </span>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown"
+              aria-expanded="false">Account</a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown09">
+              {% if current_user.is_authenticated %}
+                  <li><a class="dropdown-item" href="/profile/{{ current_user.id }}">Profile</a></li>
+                  <li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
+                  <li><a class="dropdown-item" href="/orders">Orders</a></li>
+                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              {% else %}
+                  <li><a class="dropdown-item" href="/login">Login</a></li>
+              {% endif %}
+            </ul>
+          </li>
+          <li class="nav-item">
+            <form class="d-flex" method="GET" action="{{ url_for('views.search') }}">
+              {{ search_form.hidden_tag() }}
+              {{ search_form.query(class="form-control me-2", placeholder="Search...") }}
+              {{ search_form.submit(class="btn btn-outline-light") }}
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+     <!-- Flash Messages -->
+    <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+  </div>
+
+  
+
+  <!-- Navbar -->
+  {% block body %}
+  
+  
+  
+  {% endblock %}
+  <!-- Footer -->
+  <div class="container">
+    <footer class="row row-cols-5 py-5 my-5 border-top">
+      <div class="col">
+        <a href="/" class="d-flex align-items-center mb-3 link-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+        <p class="text-muted">© 2025</p>
+      </div>
+  
+      <div class="col">
+  
+      </div>
+  
+      <div class="col">
+        <h5>Contact Us</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Phone</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Email</a></li>
+        </ul>
+      </div>
+  
+      <div class="col">
+        <h5>Customer Service</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Shipping & Returns</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About Us</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Reviews</a></li>
+        </ul>
+      </div>
+  
+      <div class="col">
+        <h5>Resources</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Terms & Conditions</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Private Policy</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static', filename='js/myscript.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+</body>
+</html>

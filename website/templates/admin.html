@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} Admin {% endblock %}
+
+{% block body %}
+
+<section class="hero-section text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Admin Dashboard</h1>
+      <p class="lead text-muted">Manage your store efficiently.</p>
+      <p>
+        <a href="/store-items" class="btn btn-primary my-2">Store Inventory</a>
+        <a href="/add-shop-items" class="btn btn-primary my-2">Add Products</a>
+        <a href="/view-orders" class="btn btn-secondary my-2">Manage Orders</a>
+        <a href="/customers" class="btn btn-secondary my-2">Customers</a>
+      </p>
+    </div>
+  </div>
+</section>
+  {% endblock %}

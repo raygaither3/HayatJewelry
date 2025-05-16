@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+
+<section class="auth-wrapper">
+  <div class="auth-container">
+    <h2>Login</h2>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+
+      <label for="email">Email</label>
+      {{ form.email(class="form-input") }}
+
+      <label for="password">Password</label>
+      {{ form.password(class="form-input") }}
+
+      {{ form.submit(class="btn-submit") }}
+    </form>
+
+    <p class="form-switch">
+      Don’t have an account? <a href="{{ url_for('auth.sign_up') }}">Sign up here</a>
+    </p>
+  </div>
+</section>
+
+{% endblock %}

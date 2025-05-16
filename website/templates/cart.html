@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %} Cart {% endblock %}
+
+{% block body %} 
+
+<div class="container my-5">
+    <div class="row">
+        {% if cart %}
+        <h1 class="text-center mb-5" style="color: Black;">Shopping Cart</h1>
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+
+                    {% for item in cart %}
+                    <div class="row">
+                        <div class="col-sm-3 text-center align-self-center">
+                            <img src="{{ url_for('static', filename='uploads/' + item.product.product_picture) }}"alt="" class="img-fluid img-thumbnail shadow-sm" height="150px" width="150px">
+                        </div>
+                        <div class="col-sm-9">
+                            <div>
+                                <h3>{{ item.product.product_name }}</h3>
+                                <div class="my-3">
+                                    <label for="quantity">Quantity</label>
+                                    <button class="minus-cart cart-btn cart-icon" data-cart-id="{{ item.id }}">−</button>
+                                    <span id="quantity">{{ item.quantity }}</span>
+                                    <button class="plus-cart cart-btn cart-icon" data-cart-id="{{ item.id }}">+</button>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <p class="mb-0"><span><strong>${{ "%.2f"|format(item.product.price) }}</strong></span></p>
+                                    <button class="remove-cart" data-cart-id="{{ item.id }}"><i class="fas fa-trash-alt"></i> Remove</button>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    {% endfor %}
+
+                </div>            
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Cart Summary</h3>
+                    <hr color="black">
+                    <ul class="list-group">
+                        {% for item in cart %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            <strong>{{ item.product.product_name }}
+                                {% if item.size %}
+                                  <small>(Size {{ item.size }})</small>
+                                {% endif %}</strong>
+                            <span id="amount">${{ "%.2f"|format(item.product.price) }} x <span id="quantity{{item.id}}">{{ item.quantity }}</span></span>
+                        </li>
+                        {% endfor %}
+                        
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Amount 
+                            <span>$ <span id="amount_tt"><strong>{{ "%.2f"|format(amount) }}</strong></span></span>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                            <div style="margin-top: 15px;">
+                                <strong>Total</strong> <small>(Including Shipping)</small>
+                            </div>
+                            <span><strong>$</strong><span id="totalamount"><strong>{{ "%.2f"|format(total) }}</strong></span></span>
+                        </li>
+                    </ul>
+
+                    <div class="d-grid gap-2">
+                        <a href="/checkout" class="btn btn-primary mb-2">Proceed To Checkout</a>
+
+                        <!-- Empty Cart Button -->
+                        <form action="/empty-cart" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-outline-danger">Empty Cart</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <h1 class="text-center">Your Cart is Empty</h1>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.querySelector("form[action='/empty-cart']").addEventListener("submit", function(event) {
+        if (!confirm("Are you sure you want to empty your cart?")) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+
+{% endblock %}

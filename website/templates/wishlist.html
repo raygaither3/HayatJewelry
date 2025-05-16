@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Wishlist{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    {% if wishlist %}
+    <h1 class="text-center mb-5" style="color: #C1272D; font-family: 'Playfair Display', serif;">Your Wishlist</h1>
+
+    <!-- Move All to Cart Button -->
+    <div class="text-center mb-4">
+        <form method="POST" action="{{ url_for('cart_routes.move_all_to_cart') }}" id="moveAllForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-primary" type="submit" id="moveAllButton">
+                Move All to Cart 🛒
+            </button>
+        </form>
+    </div>
+
+    <div class="row" id="wishlistItems">
+        {% for item in wishlist %}
+        <div class="col-md-6 mb-4 wishlist-item" data-id="{{ item.id }}">
+            <div class="card shadow-sm" style="border: 1px solid #ccc;">
+                <div class="row g-0 align-items-center">
+                    <div class="col-md-4 text-center">
+                        <img src="{{ url_for('static', filename='uploads/' + item.product.product_picture) }}" alt="{{ item.product.product_name }}" class="img-fluid img-thumbnail" style="max-height: 150px;">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: #212529;">{{ item.product.product_name }}</h5>
+                            <p class="card-text" style="color: #C1272D; font-weight: bold;">${{ "%.2f"|format(item.product.price) }}</p>
+                            <div class="d-flex justify-content-between">
+                                <!-- Remove from Wishlist Button -->
+                                <form method="POST" action="/remove-from-wishlist/{{ item.id }}" class="wishlist-action">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button class="btn btn-outline-danger btn-sm" type="submit">
+                                        <i class="fas fa-trash-alt"></i> Remove
+                                    </button>
+                                </form>
+
+                                <!-- Add to Cart Button -->
+                                <form action="{{ url_for('cart_routes.add_to_cart', item_id=item.product.id) }}" method="POST" class="wishlist-action">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="from_wishlist" value="true">
+                                    <button type="submit" class="btn btn-dark btn-lg w-100 d-flex align-items-center justify-content-center gap-2 animated-btn shadow-sm">
+                                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center my-5">
+        <h2 style="color: #999;">Your Wishlist is Empty</h2>
+        <a href="/" class="btn btn-outline-secondary mt-3">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- JavaScript to handle wishlist actions smoothly -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const wishlistForms = document.querySelectorAll('.wishlist-action');
+
+    wishlistForms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop normal form submit
+
+            const formData = new FormData(form);
+            const actionUrl = form.action;
+            const wishlistItem = form.closest('.wishlist-item');
+
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Animate and remove the wishlist item
+                    wishlistItem.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    wishlistItem.style.opacity = '0';
+                    wishlistItem.style.transform = 'translateX(-20px)';
+                    setTimeout(() => {
+                        wishlistItem.remove();
+
+                        // Check if wishlist is now empty
+                        if (document.querySelectorAll('.wishlist-item').length === 0) {
+                            document.getElementById('wishlistItems').innerHTML = `
+                                <div class="text-center my-5">
+                                    <h2 style="color: #999;">Your Wishlist is Empty</h2>
+                                    <a href="/" class="btn btn-outline-secondary mt-3">Start Shopping</a>
+                                </div>
+                            `;
+                            document.getElementById('moveAllButton').disabled = true;
+                            document.getElementById('moveAllButton').innerText = 'No Items to Move';
+                            document.getElementById('moveAllButton').classList.remove('btn-primary');
+                            document.getElementById('moveAllButton').classList.add('btn-secondary', 'disabled');
+                        }
+                    }, 500); // Wait for animation to finish
+                } else {
+                    alert('Error: Could not update wishlist.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error: Could not connect to server.');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

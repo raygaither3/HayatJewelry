@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %} Products {% endblock %}
+{% block body %}
+
+
+{% if selected_category %}
+<section class="hero-section text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1>{{ selected_category }}</h1>
+      <p class="lead">Explore our beautiful jewelry collection.</p>
+    </div>
+  </div>
+</section>
+
+
+  <h2 class="text-center my-4">{{ selected_category }}</h2>
+{% else %}
+  <h2 class="text-center my-4">All Products</h2>
+{% endif %}
+
+<div class="container-fluid px-0">
+  <div class="row no-gutters">
+    {% for item in products %}
+      <div class="col-6 col-md-3">
+        <a href="/product/{{ item.id }}" class="product-link">
+          <div class="product-card">
+            <img src="{{ url_for('static', filename='uploads/' + item.product_picture) }}" class="img-fluid" alt="{{ item.product_name }}">
+            <div class="product-overlay">
+              <h5 class="product-name">{{ item.product_name }}</h5>
+              <p class="product-price">${{ '%.2f'|format(item.price) }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}
+
+

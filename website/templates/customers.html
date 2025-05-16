@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}All Customers{% endblock %}
+
+{% block body %}
+<div class="container mt-5" style="background-color: #f8f9fa; border-radius: 10px; padding: 30px;">
+    <h2 class="mb-4 text-dark">All Customers</h2>
+
+    {% for customer in customers %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">{{ customer.username }}</h5>
+            <p class="card-text text-secondary">
+                <strong class="text-dark">Full Name:</strong> {{ customer.username }}<br>
+                <strong class="text-dark">Email:</strong> {{ customer.email }}<br>
+                <strong class="text-dark">Phone Number:</strong> {{ customer.phone_number or 'Not Available' }}<br>
+                <strong class="text-dark">Shipping Address:</strong> {{ customer.address or 'Not Available' }}<br>
+            </p>
+
+            <h6 class="mb-3 text-dark">Customer Orders:</h6>
+            {% if customer.orders %}
+            <ul class="list-group">
+                {% for order in customer.orders %}
+                <li class="list-group-item">
+                    Order #{{ order.id }} - Status: {{ order.status.title() }}
+                    <button class="btn btn-outline-dark btn-sm float-end" data-bs-toggle="modal" data-bs-target="#orderModal{{ order.id }}">View Details</button>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No orders found for this customer.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% for order in customer.orders %}
+    <!-- Modal for Order Details -->
+    <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1" aria-labelledby="orderModalLabel{{ order.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content bg-white text-dark border">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel{{ order.id }}">Order #{{ order.id }} Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Full Name:</strong> {{ order.full_name }}</p>
+                    <p><strong>Email:</strong> {{ order.email }}</p>
+                    <p><strong>Phone:</strong> {{ order.phone }}</p>
+                    <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+                    <p><strong>Status:</strong> {{ order.status.title() }}</p>
+                    <p><strong>Total:</strong> ${{ '%.2f' % order.total }}</p>
+                    <h6 class="text-dark">Order Items:</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for item in order.items %}
+                        <li class="list-group-item bg-light text-dark">
+                            {{ item.product.product_name }} (x{{ item.quantity }}) - ${{ '%.2f' % item.product.price }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% endfor %}
+</div>
+{% endblock %}

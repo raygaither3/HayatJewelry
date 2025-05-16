@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %} Orders {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        {% if orders %}
+            <h1 class="text-center mb-5 text-white">Your Orders</h1>
+            <div class="col-lg-10">
+                {% for order in orders %}
+                    {% set total = namespace(value=0) %}
+                    {% for item in order.order_items %}
+                        {% set total.value = total.value + (item.quantity * item.price) %}
+                    {% endfor %}
+
+                    <div class="card bg-dark text-white shadow-lg border-0 rounded-4 p-4 mb-5">
+                        <h4 class="mb-2">Order #{{ order.id }} - 
+                            <span class="fw-bold {% if order.status == 'Canceled' %}text-danger{% elif order.status == 'Delivered' %}text-success{% else %}text-info{% endif %}">
+                                {{ order.status }}
+                            </span>
+                        </h4>
+                        <p class="text-muted small">{{ order.order_items|length }} item{{ '' if order.order_items|length == 1 else 's' }} • ${{ "%.2f"|format(order.total) }} Total</p>
+
+                        {% for item in order.order_items %}
+                            <div class="row mb-4 align-items-center">
+                                <div class="col-md-3 text-center">
+                                    <img src="/static/uploads/{{ item.product.product_picture }}"  alt="{{ item.product.product_name }}"
+                                        class="img-fluid rounded-3 shadow-sm border border-secondary">
+                                </div>
+                                <div class="col-md-6">
+                                    <h4 class="text-capitalize">{{ item.product.product_name }}</h4>
+                                    <p class="text-muted mb-1">Quantity: {{ item.quantity }}</p>
+                                    <p class="text-muted mb-1">Price: ${{ "%.2f"|format(item.price) }}</p>
+                                    <p class="text-muted mb-1">Subtotal: ${{ "%.2f"|format(item.price * item.quantity) }}</p>
+                                </div>
+                            </div>
+                            {% if not loop.last %}
+                                <hr class="text-secondary">
+                            {% endif %}
+                        {% endfor %}
+
+                        <p class="text-end fw-bold fs-5 mt-3">Order Total: ${{ "%.2f"|format(order.total) }}</p>
+
+                        <div class="mt-3 d-flex flex-wrap gap-2">
+                            {% if order.status == 'Pending' %}
+                                <form method="POST" action="{{ url_for('views.cancel_order', order_id=order.id) }}">
+                                    {{ csrf_token() }}
+                                    <button class="btn btn-outline-danger btn-sm">Cancel Order</button>
+                                </form>
+                            {% elif order.status == 'Out for delivery' %}
+                                <a href="{{ order.tracking_url or '#' }}" class="btn btn-outline-warning btn-sm" target="_blank">
+                                    Track Order
+                                </a>
+                            {% endif %}
+
+                            <a href="#" class="btn btn-outline-light btn-sm">
+                                Download Invoice
+                            </a>
+
+                            <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#orderModal{{ order.id }}">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content bg-dark text-white">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title">Order #{{ order.id }} Details</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Status:</strong> {{ order.status }}</p>
+                                    <p><strong>Ordered on:</strong> {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                                    {% if order.tracking_url %}
+                                        <p><strong>Tracking:</strong> <a href="{{ order.tracking_url }}" target="_blank">View Shipment</a></p>
+                                    {% endif %}
+
+                                    <hr class="text-secondary">
+
+                                    {% for item in order.order_items %}
+                                        <p><strong>Product:</strong> {{ item.product.product_name }}</p>
+                                        <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+                                        <p><strong>Price:</strong> ${{ "%.2f"|format(item.price) }} x {{ item.quantity }} = ${{ "%.2f"|format(item.price * item.quantity) }}</p>
+                                        {% if not loop.last %}
+                                            <hr class="text-secondary">
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <hr class="text-secondary">
+                                    <p class="text-end fw-bold fs-5">Order Total: ${{ "%.2f"|format(order.total) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h1 class="text-center text-white mt-5">You have no Orders</h1>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

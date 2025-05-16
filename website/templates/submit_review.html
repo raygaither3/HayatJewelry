@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %} Submit Review {% endblock %}
+
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-dark text-light">
+    <div class="bg-light text-dark p-5 rounded shadow" style="width: 100%; max-width: 600px;">
+        <h2 class="mb-4 text-center text-danger">Write a Review</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.rating.label }}</label>
+                {{ form.rating(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.review_text.label }}</label>
+                {{ form.review_text(class="form-control", rows="4") }}
+            </div>
+
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-danger") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

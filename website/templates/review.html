@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %} Review {% endblock %}
+
+{% block body %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.rating.label }}<br>
+        {{ form.rating(class="form-control") }}
+    </div>
+    <div>
+        {{ form.review_text.label }}<br>
+        {{ form.review_text(rows=5, class="form-control") }}
+    </div>
+    <div>
+        {{ form.submit(class="btn btn-primary mt-2") }}
+    </div>
+</form>
+
+{% if reviews %}
+    <h2>Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                <strong>{{ review.rating }} stars:</strong> {{ review.review_text }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No reviews yet.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,89 @@
+/* Sign-Up page styles */
+
+
+/* Base Styles */
+body {
+    background-color: #1a1a1a; /* Deep black for contrast */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container */
+.auth-container {
+    background: linear-gradient(to bottom right, #2b2b2b, #1c1c1c);
+    border: 1px solid #b0b0b0;
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Title */
+.auth-container h2 {
+    color: #c0c0c0;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+/* Labels */
+.auth-container label {
+    color: #e0e0e0;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs */
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #C0C0C0;
+    border-radius: 5px;
+  }
+  
+  .form-input:focus {
+    border-color: #C1272D;
+    outline: none;
+  }
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(to right, #ff4d4d, #cc0000);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(to right, #cc0000, #990000);
+    box-shadow: 0 0 15px rgba(204, 0, 0, 0.6);
+}
+
+/* Optional: Add some subtle form animation */
+form {
+    animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
