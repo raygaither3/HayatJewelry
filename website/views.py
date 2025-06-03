@@ -10,6 +10,13 @@ from website.forms import ReviewForm
 
 views = Blueprint('views', __name__)  # Create a Blueprint object
 
+slug_to_category = {
+    'earrings': 'Earrings',
+    'bracelets-rings': 'Bracelets & Rings',
+    'necklace': 'Necklace',
+    'handmades': "Hayat's Handmades"
+}
+
 
 @views.route('/')
 def home():
@@ -22,13 +29,18 @@ def home():
 
 
 
-@views.route('/products/<category>')
-def products_by_category(category):
-    products = Product.query.filter_by(category=category.capitalize()).all()
+@views.route('/products/<slug>')
+def products_by_category(slug):
+    category_name = slug_to_category.get(slug)
+    if not category_name:
+        flash("Category not found.", "danger")
+        return redirect(url_for("views.all_products"))
+
+    products = Product.query.filter_by(category=category_name).all()
     return render_template(
         "products.html",
         products=products,
-        selected_category=category.capitalize(),
+        selected_category=category_name,
         cart=Cart.query.filter_by(customer_id=current_user.id).all()
         if current_user.is_authenticated else []
     )
@@ -99,3 +111,14 @@ def search():
             flash("No results found for your search.", "info")
             return redirect('/')
     return redirect('/')
+
+@views.route('/products')
+def all_products():
+    products = Product.query.all()
+    return render_template(
+        "products.html",
+        products=products,
+        selected_category=None,
+        cart=Cart.query.filter_by(customer_id=current_user.id).all()
+        if current_user.is_authenticated else []
+    )

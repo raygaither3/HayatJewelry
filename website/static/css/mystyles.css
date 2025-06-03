@@ -16,7 +16,7 @@
   position: relative;
   width: 100vw;
   min-height: 70vh;
-  background: url('../images/hayats-background.jpg') center/cover no-repeat;
+  background: url('../images/hero_new.png') center/cover no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -102,73 +102,70 @@
   
   /* ========== CATEGORY SECTION ========== */
   
-  .category-link {
-      text-decoration: none;
-      color: inherit;
-  }
-  
-  .category-card {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      background-color: #eee;
-      border: 1px solid white;
-  }
-  
-  .category-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-      z-index: 1;
-  }
-  
-  .category-card:hover img {
-      transform: scale(1.05);
-  }
-  
-  
-  
-  .category-overlay {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(4px);
-      text-align: center;
-      color: #1a1a1a; /* Dark text */
-      z-index: 2;
-  }
-  
-  .category-name {
-      font-weight: bold;
-      margin: 0;
-      font-size: 1.2rem;
-  }
-  
-  .shop-now {
-      font-size: 0.9rem;
-      color: #d60036;
-      font-weight: 500;
-  }
-  
-  
-  
-  
-  
-  .category-card::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 1px solid white; /* Slim line between cards */
-      box-sizing: border-box;
-      pointer-events: none;
-  }
-  
+.category-card {
+  position: relative;
+  aspect-ratio: 1 / 1; /* Perfect square; change to 5/6 for taller cards */
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.category-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  border-radius: 6px;
+}
+
+.category-card:hover img {
+  transform: scale(1.05);
+}
+
+.category-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.3));
+  backdrop-filter: blur(6px);
+  color: #1a1a1a;
+  text-align: center;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.category-name {
+  font-family: 'Georgia', serif;
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+  color: #1f1f1f;
+}
+
+.shop-now {
+  font-size: 0.85rem;
+  color: #c21830;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.category-card:hover .category-overlay {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.5));
+}
+
+.category-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid white;
+  box-sizing: border-box;
+  pointer-events: none;
+}
   
   
   
@@ -264,6 +261,100 @@
     font-weight: 600;
     font-size: 1rem;
     text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3); /* slight lift if overlay is dark */
+}
+
+
+.product-header {
+  background-color: #fdfcfa;
+  background-image: 
+    url('https://www.transparenttextures.com/patterns/arabesque.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
+  border-bottom: 2px solid #e5e5e5;
+  color: #222;
+  font-family: 'Georgia', serif;
+  padding: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light overlay to soften the pattern */
+.product-header::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 🌸 Watermark Image */
+.product-header::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;background: 
+    linear-gradient(rgba(192, 192, 192, 0.3), rgba(255, 255, 255, 0.1)),
+    url('/static/images/hayats-logo-b.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.30;
+  z-index: 0;
+  filter: grayscale(80%);
+}
+
+/* Make sure header content is above everything */
+.product-header .container,
+.product-header .row,
+.product-header h1,
+.product-header p {
+  position: relative;
+  z-index: 1;
+}
+
+.product-header h1 {
+  font-size: 2.5rem;
+  color: #a80000;
+  margin-bottom: 0.5rem;
+}
+
+.product-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.hero-section-products {
+  background: url('/static/images/moroccan-background.jpg') no-repeat center top;
+  background-size: cover;
+  position: relative;
+  padding-top: 120px;
+  padding-bottom: 100px;
+  overflow: hidden;
+  color: #333;
+  text-align: center;
+}
+
+.logo-watermark-products {
+  position: absolute;
+  top: 20px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  background-image: url('/static/images/hayats-logo-1.png'); 
+  background-size: 200px; /* Adjust size if needed */
+  background-repeat: no-repeat;
+  background-position: top center;
+  opacity: 0.08;
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 0;
 }
   
   
@@ -414,6 +505,17 @@
       border-bottom: 1px solid #444;
       padding-bottom: 0.5rem;
     }
+
+.orders-pattern-bg {
+  background-color: #fdfcfa;
+  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
+  padding: 60px 20px;
+  border-top: 1px solid #eee;
+  font-family: 'Georgia', serif;
+}
   
   
   
@@ -523,53 +625,86 @@
   }
   
   
-  /* ========== Cart ========== */
-  
-  .cart-btn {
-      background-color: transparent;
-      color: #dc3545;
-      border: 2px solid #dc3545;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: 0.2s;
-      margin: 0 4px;
-  }
-  
-  .cart-btn:hover {
-      background-color: #dc3545;
-      color: white;
-  }
-  
-  .cart-btn:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.4);
-  }
-  
-  .cart-icon {
-      font-weight: bold;
-      font-size: 18px;
-      display: inline-block;
-      width: 28px;
-      text-align: center;
-  }
-  
-  .remove-cart {
-      background-color: #6c757d; /* dark gray */
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-  }
-  
-  .remove-cart:hover {
-      background-color: #5a6268;
-  }
-  
+/* --- Cart Typography and Layout --- */
+.cart-container {
+  font-family: 'Georgia', serif; /* Match rest of the site */
+  background-color: #fdfcfa;
+  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
+  padding: 60px 20px;
+  border-top: 1px solid #eee;
+}
+
+/* --- Card Styling --- */
+.card {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Cart Buttons --- */
+.cart-btn {
+  background-color: transparent;
+  color: #c21830;
+  border: 2px solid #c21830;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: 'Georgia', serif;
+}
+
+.cart-btn:hover {
+  background-color: #c21830;
+  color: white;
+}
+
+.cart-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(194, 24, 48, 0.3);
+}
+
+/* --- Quantity Badge --- */
+.cart-icon {
+  font-weight: bold;
+  font-size: 18px;
+  width: 30px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* --- Remove Button --- */
+.remove-cart {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Georgia', serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.remove-cart:hover {
+  background-color: #222;
+}
+
+/* --- Cart Headers and Summary --- */
+.cart-summary h3,
+h1.text-center {
+  font-family: 'Georgia', serif;
+  color: #1f1f1f;
+  margin-bottom: 1rem;
+}
+
+.cart-summary ul li {
+  font-family: 'Georgia', serif;
+}
   
   
   
@@ -646,4 +781,122 @@ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     max-height: 80px;
     object-fit: contain;
     margin-right: 12px;
+}
+
+
+.admin-add-product-section {
+  padding: 60px 20px;
+  background: #f8f8f8;
+  color: #222;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #b3003c;
+  margin-bottom: 40px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.product-form {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn-submit {
+  background-color: #b3003c;
+  color: white;
+  padding: 12px 30px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+  background-color: #a00035;
+}
+
+
+
+.wishlist-container {
+  font-family: 'Georgia', serif;
+  background-color: #fdfcfa;
+  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
+  padding: 60px 20px;
+  border-top: 1px solid #eee;
+}
+
+
+
+
+
+.floral-bg {
+  font-family: 'Georgia', serif;
+  background-color: #fdfcfa;
+  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
+  padding: 60px 20px;
+  border-top: 1px solid #eee;
+}
+
+
+.empty-message {
+  color: #5a5a5a; /* slightly darker than #666 */
+  font-family: 'Georgia', serif;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+
+/* ========== FOOTER ========== */
+
+.footer-link {
+  color: #666;
+  transition: color 0.3s;
+}
+
+.footer-link:hover {
+  color: #C1272D; /* Match your red accent */
+  text-decoration: underline;
 }

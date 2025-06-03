@@ -1,18 +1,15 @@
 import os
 from flask_bootstrap import Bootstrap5
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_wtf.csrf import CSRFProtect
 from .forms import SearchForm
-from flask_migrate import Migrate
 from dotenv import load_dotenv
+from .config import Config
+from .extensions import db, mail, csrf, migrate
 
 
 load_dotenv()
-db = SQLAlchemy()
-migrate = Migrate()
-csrf = CSRFProtect()
+
 
 def create_database():
     db.create_all()
@@ -22,15 +19,13 @@ def create_database():
 def create_app():
     app = Flask(__name__)
     Bootstrap5(app)
-    app.config['SECRET_KEY'] = 'secret-key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    uploads_path = os.path.join(os.path.dirname(__file__), 'static', 'uploads')
-    os.makedirs(uploads_path, exist_ok=True)
-    app.config['UPLOAD_FOLDER']      = uploads_path
-    app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+    app.config.from_object(Config)
+    # Ensure the upload folder exists
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     csrf.init_app(app)
+    
+    mail.init_app(app)
 
     db.init_app(app)
     migrate.init_app(app, db)

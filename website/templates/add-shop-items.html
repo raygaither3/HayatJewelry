@@ -1,36 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Add Shop Items{% endblock %}
+{% block title %}Add New Product{% endblock %}
+
 {% block body %}
-<div class="auth-wrapper">
-  <div class="auth-container">
-    <h2>Add a New Product</h2>
-    <form method="POST" enctype="multipart/form-data">
+<section class="admin-add-product-section">
+  <div class="container">
+    <h2 class="section-title">Add a New Product</h2>
+    <form method="POST" enctype="multipart/form-data" class="product-form">
       {{ form.hidden_tag() }}
 
-      <label>Product Name</label>
-      {{ form.product_name(class="form-input") }}
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Product Name</label>
+          {{ form.product_name(class="form-input") }}
+        </div>
 
-      <label>Price</label>
-      {{ form.price(class="form-input") }}
+        <div class="form-group">
+          <label>Price</label>
+          {{ form.price(class="form-input") }}
+        </div>
 
-      <label>Sale Price</label>
-      {{ form.sale_price(class="form-input") }}
+        <div class="form-group">
+          <label>Sale Price</label>
+          {{ form.sale_price(class="form-input") }}
+        </div>
 
-      <label>Description</label>
-      {{ form.description(class="form-input") }}
+        <div class="form-group">
+          <label>Description</label>
+          {{ form.description(class="form-input", rows=4) }}
+        </div>
 
+        <div class="form-group">
+          <label>Product Images</label>
+          {{ form.product_images(class="form-input", multiple=true) }}
+        </div>
 
-      <label>Product Images</label>
-      {{ form.product_images(class="form-input", multiple=true) }}
+        <div class="form-group">
+          <label>Category</label>
+          {{ form.category(class="form-input") }}
+        </div>
 
-      <label>Category</label>
-      {{ form.category(class="form-input") }}
+        <div class="form-group">
+          <label>Quantity</label>
+          {{ form.quantity(class="form-input") }}
+        </div>
+      </div>
 
-      <label>Quantity</label>
-      {{ form.quantity(class="form-input") }}
-
-      {{ form.submit(class="btn-submit") }}
+      <div class="form-actions">
+        {{ form.submit(class="btn-submit") }}
+      </div>
     </form>
   </div>
-</div>
+</section>
 {% endblock %}

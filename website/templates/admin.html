@@ -1,21 +1,54 @@
 {% extends "base.html" %}
 
-{% block title %} Admin {% endblock %}
+{% block title %}Admin Dashboard | Hayat's Bijoux{% endblock %}
 
 {% block body %}
+<section class="admin-dashboard container py-5">
+  <div class="dashboard-header mb-4 text-center">
+    <h1 class="display-5" style="font-weight: 600; color: #b3003c;">Admin Dashboard</h1>
+    <p class="lead text-muted">Welcome, manage your boutique with ease.</p>
+  </div>
 
-<section class="hero-section text-center container">
-  <div class="row py-lg-5">
-    <div class="col-lg-6 col-md-8 mx-auto">
-      <h1 class="fw-light">Admin Dashboard</h1>
-      <p class="lead text-muted">Manage your store efficiently.</p>
-      <p>
-        <a href="/store-items" class="btn btn-primary my-2">Store Inventory</a>
-        <a href="/add-shop-items" class="btn btn-primary my-2">Add Products</a>
-        <a href="/view-orders" class="btn btn-secondary my-2">Manage Orders</a>
-        <a href="/customers" class="btn btn-secondary my-2">Customers</a>
-      </p>
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Inventory</h5>
+          <p class="card-text">Edit and manage store products.</p>
+          <a href="/store-items" class="btn btn-outline-dark">Manage</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Add Products</h5>
+          <p class="card-text">Add new jewelry items to your store.</p>
+          <a href="/add-shop-items" class="btn btn-outline-dark">Add New</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Orders</h5>
+          <p class="card-text">View and process customer orders.</p>
+          <a href="/view-orders" class="btn btn-outline-dark">View Orders</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Customers</h5>
+          <p class="card-text">Browse customer profiles and info.</p>
+          <a href="/customers" class="btn btn-outline-dark">View</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
-  {% endblock %}
+{% endblock %}

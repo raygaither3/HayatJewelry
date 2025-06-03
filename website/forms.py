@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import  DecimalField, EmailField, IntegerField, MultipleFileField, SelectField, StringField, SubmitField, PasswordField, TextAreaField
-from wtforms.validators import DataRequired, Length, Optional, Email
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length, Optional
+from .models import Customer
 
 
 
@@ -31,11 +32,14 @@ class ProductInventoryForm(FlaskForm):
     price = DecimalField('Price', validators=[DataRequired()])
     sale_price = DecimalField('Sale Price', validators=[Optional()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    category = SelectField('Category', choices=[('Rings', 'Rings'),
-    ('Necklaces', 'Necklaces'),
-    ('Bracelets', 'Bracelets'),
-    ('Earrings', 'Earrings'),
-    ('Collections', 'Collections')], validators=[DataRequired()])
+    
+    category = SelectField('Category', choices=[
+        ('Earrings', 'Earrings'),
+        ('Bracelets & Rings', 'Bracelets & Rings'),
+        ('Necklace', 'Necklace'),
+        ("Hayat's Handmades", "Hayat's Handmades")
+    ], validators=[DataRequired()])
+    
     quantity = IntegerField('Quantity', validators=[DataRequired()])
     product_images = MultipleFileField('Product Images', validators=[Optional()])
     submit = SubmitField('Submit')
@@ -92,3 +96,19 @@ class CheckoutForm(FlaskForm):
     ], validators=[DataRequired()])
     notes = TextAreaField("Order Notes (Optional)")
     submit = SubmitField("Place Order")
+
+
+
+class RequestResetForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+    def validate_email(self, email):
+        user = Customer.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('No account found with that email.')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

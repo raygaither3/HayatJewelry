@@ -14,7 +14,7 @@
     {{ bootstrap.load_css() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mystyles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='hb_favicon_black_circle.ico') }}" type="image/x-icon">
-    <title>Hayat's Bijoux | {% block title %} {% endblock %}</title>
+    <title>{% block title %}Hayat's Bijoux{% endblock %} | Elegant Moroccan Jewelry</title>
 </head>
 
 <body style="background-color: white;">
@@ -37,22 +37,24 @@
             <a class="nav-link" href="{{ url_for('admin.admin_page') }}">Admin Dashboard</a>
           </li>
           {% endif %}
+          {% set nav_categories = {
+              'earrings': 'Earrings',
+              'bracelets-rings': 'Bracelets & Rings',
+              'necklace': 'Necklace',
+              'handmades': "Hayat's Handmades"
+          } %}
+          {% if current_user.is_authenticated %}
+
+          {% for slug, name in nav_categories.items() %}
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/products/Earrings">Earrings</a>
+            <a class="nav-link active" href="{{ url_for('views.products_by_category', slug=slug) }}">{{ name }}</a>
           </li>
+          {% endfor %}
           <li class="nav-item">
-            <a class="nav-link active" href="/products/Rings">Rings</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="/products/Necklace">Necklaces</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="/products/Bracelets">Bracelets</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/products/Collections">Collections</a>
-          </li>
+            <a class="nav-link" href="{{ url_for('views.all_products') }}">All Products</a>
+          </li> 
         </ul>
+          {% endif %}
 
         <!-- Right Side: Cart, Dropdown, Search -->
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-2">
@@ -88,7 +90,7 @@
             <form class="d-flex" method="GET" action="{{ url_for('views.search') }}">
               {{ search_form.hidden_tag() }}
               {{ search_form.query(class="form-control me-2", placeholder="Search...") }}
-              {{ search_form.submit(class="btn btn-outline-light") }}
+              {{ search_form.submit(class="btn btn-outline-dark") }}
             </form>
           </li>
         </ul>
@@ -117,41 +119,44 @@
   {% endblock %}
   <!-- Footer -->
   <div class="container">
-    <footer class="row row-cols-5 py-5 my-5 border-top">
+    <footer class="row row-cols-5 py-5 my-5 border-top bg-light" style="color: #333;">
       <div class="col">
+        <div class="col">
+          <a href="/" class="d-flex align-items-center mb-3 text-decoration-none">
+            <img src="{{ url_for('static', filename='images/hayats-logo-b.png') }}" alt="Hayat's Bijoux Logo" style="height: 50px; opacity: 0.85;">
+          </a>
+          <p class="text-muted">© 2025</p>
+        </div>
         <a href="/" class="d-flex align-items-center mb-3 link-dark text-decoration-none">
           <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
         </a>
-        <p class="text-muted">© 2025</p>
       </div>
-  
+
+      <div class="col"></div>
+
       <div class="col">
-  
-      </div>
-  
-      <div class="col">
-        <h5>Contact Us</h5>
+        <h5 style="color: #555;">Contact Us</h5>
         <ul class="nav flex-column">
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Phone</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Email</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">Phone</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">Email</a></li>
         </ul>
       </div>
-  
+
       <div class="col">
-        <h5>Customer Service</h5>
+        <h5 style="color: #555;">Customer Service</h5>
         <ul class="nav flex-column">
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Shipping & Returns</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About Us</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Reviews</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">Shipping & Returns</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">About Us</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">Reviews</a></li>
         </ul>
       </div>
-  
+
       <div class="col">
-        <h5>Resources</h5>
+        <h5 style="color: #555;">Resources</h5>
         <ul class="nav flex-column">
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Terms & Conditions</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Private Policy</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">Terms & Conditions</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">Privacy Policy</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 footer-link">FAQs</a></li>
         </ul>
       </div>
     </footer>

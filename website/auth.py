@@ -1,7 +1,9 @@
-from flask import Blueprint, flash, redirect, render_template
+from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required, login_user, logout_user
+
+from website.email_utils import send_reset_email
 from . import db
-from .forms import LoginForm, PasswordChangeForm, ReviewForm, SignUpForm
+from .forms import LoginForm, PasswordChangeForm, ReviewForm, SignUpForm,RequestResetForm, ResetPasswordForm
 from .models import Customer, Product, Review
 
 
@@ -136,4 +138,37 @@ def submit_review(product_id):
     return render_template('submit_review.html', form=form, product=product)
 
 
+@auth.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
+
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = Customer.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('A password reset email has been sent.', 'info')
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/reset_request.html', form=form)
+
+
+@auth.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
+
+    user = Customer.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('auth.reset_request'))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.password = form.password.data
+        db.session.commit()
+        flash('Your password has been updated!', 'success')
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/reset_token.html', form=form)
 

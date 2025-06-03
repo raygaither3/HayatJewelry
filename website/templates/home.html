@@ -5,8 +5,6 @@
 {% block body %}
 
 <!-- Hero Section -->
-
-
 <div class="hero-section text-white d-flex flex-column align-items-center justify-content-center">
   <img src="{{ url_for('static', filename='images/hayats-logo-1.png') }}" alt="Hayat's Bijoux Logo" class="hero-logo mb-3">
   
@@ -20,13 +18,12 @@
   <p class="hero-subtitle">Discover unique pieces that speak to your soul.</p>
 </div>
 
-
 <!-- Category Cards Section -->
 <div class="container-fluid px-0">
   <div class="row no-gutters">
     <!-- Earrings -->
     <div class="col-6 col-md-3">
-      <a href="/products/Earrings" class="category-link">
+      <a href="{{ url_for('views.products_by_category', slug='earrings') }}" class="category-link">
         <div class="category-card">
           <img src="/static/images/Earrings.jpg" class="img-fluid" alt="Earrings">
           <div class="category-overlay">
@@ -37,13 +34,13 @@
       </a>
     </div>
 
-    <!-- Rings -->
+    <!-- Bracelets & Rings -->
     <div class="col-6 col-md-3">
-      <a href="/products/Rings" class="category-link">
+      <a href="{{ url_for('views.products_by_category', slug='bracelets-rings') }}" class="category-link">
         <div class="category-card">
-          <img src="/static/images/Rings.jpg" class="img-fluid" alt="Rings">
+          <img src="/static/images/Hayats_Handmades.jpg" class="img-fluid" alt="Bracelets and Rings">
           <div class="category-overlay">
-            <h4 class="category-name">Rings</h4>
+            <h4 class="category-name">Bracelets & Rings</h4>
             <span class="shop-now">Shop Now →</span>
           </div>
         </div>
@@ -52,9 +49,9 @@
 
     <!-- Necklaces -->
     <div class="col-6 col-md-3">
-      <a href="/products/Necklace" class="category-link">
+      <a href="{{ url_for('views.products_by_category', slug='necklace') }}" class="category-link">
         <div class="category-card">
-          <img src="/static/images/Necklaces.jpg" class="img-fluid" alt="Necklaces">
+          <img src="/static/images/hayats_necklace.png" class="img-fluid" alt="Necklaces">
           <div class="category-overlay">
             <h4 class="category-name">Necklaces</h4>
             <span class="shop-now">Shop Now →</span>
@@ -63,13 +60,13 @@
       </a>
     </div>
 
-    <!-- Bracelets -->
+    <!-- Hayat's Handmades -->
     <div class="col-6 col-md-3">
-      <a href="/products/Bracelets" class="category-link">
+      <a href="{{ url_for('views.products_by_category', slug='handmades') }}" class="category-link">
         <div class="category-card">
-          <img src="/static/images/bracelet_homemade.jpg" class="img-fluid" alt="Bracelets">
+          <img src="/static/images/handmades_cat.jpg" class="img-fluid" alt="Hayat's Handmades">
           <div class="category-overlay">
-            <h4 class="category-name">Bracelets & Artisan Goods</h4>
+            <h4 class="category-name">Hayat's Handmades</h4>
             <span class="shop-now">Shop Now →</span>
           </div>
         </div>
@@ -96,6 +93,5 @@
     {% endfor %}
   </div>
 </div>
-
 
 {% endblock %}

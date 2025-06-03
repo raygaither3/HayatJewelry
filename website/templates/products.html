@@ -1,24 +1,19 @@
 {% extends 'base.html' %}
 
 {% block title %} Products {% endblock %}
+
 {% block body %}
 
-
-{% if selected_category %}
-<section class="hero-section text-center container">
-  <div class="row py-lg-5">
-    <div class="col-lg-6 col-md-8 mx-auto">
-      <h1>{{ selected_category }}</h1>
-      <p class="lead">Explore our beautiful jewelry collection.</p>
+<section class="product-header text-center">
+  <div class="container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1>{{ selected_category if selected_category else 'All Products' }}</h1>
+        <p class="lead">Explore our beautiful jewelry collection.</p>
+      </div>
     </div>
   </div>
 </section>
-
-
-  <h2 class="text-center my-4">{{ selected_category }}</h2>
-{% else %}
-  <h2 class="text-center my-4">All Products</h2>
-{% endif %}
 
 <div class="container-fluid px-0">
   <div class="row no-gutters">
@@ -38,7 +33,4 @@
   </div>
 </div>
 
-
 {% endblock %}
-
-
