@@ -17,7 +17,7 @@ class Customer(db.Model, UserMixin, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     username = db.Column(db.String(150), unique=True, nullable=False)
-    password_hash = db.Column(db.String(150), nullable=False)
+    password_hash = db.Column(db.Text, nullable=False)
     phone_number = db.Column(db.String(100))
     
 
