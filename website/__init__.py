@@ -19,8 +19,10 @@ def create_app():
 
     # Load the appropriate config based on FLASK_ENV
     if os.environ.get("FLASK_ENV") == "production":
+        print("Using ProductionConfig")
         app.config.from_object(ProductionConfig)
     else:
+        print("Using DevelopmentConfig")
         app.config.from_object(DevelopmentConfig)
 
     # Ensure the upload folder exists

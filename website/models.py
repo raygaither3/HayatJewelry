@@ -2,14 +2,15 @@ from .extensions import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func
+from datetime import datetime
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask import current_app
 from itsdangerous import BadSignature, SignatureExpired
 
 
 class TimestampMixin(object):
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    updated_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    created_at = db.Column(db.DateTime, nullable=False, default=func.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=func.now(), onupdate=func.now())
 
 
 class Customer(db.Model, UserMixin, TimestampMixin):

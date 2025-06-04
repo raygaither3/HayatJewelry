@@ -35,9 +35,9 @@ def sign_up():
                 flash('Account Created Successfully, You can now Login')
                 return redirect('/login')
             except Exception as e:
-                print(e)   
-
-                flash('Account Not Created, Email already exists')
+                db.session.rollback()
+                print("❌ SIGNUP ERROR:", e)
+                flash(f"Account not created: {str(e)}", category="error")
 
             form.email.data = ''
             form.username.data = ''
