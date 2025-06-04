@@ -100,11 +100,11 @@
   
   
   
-  /* ========== CATEGORY SECTION ========== */
-  
+/* ========== CATEGORY SECTION ========== */
+
 .category-card {
   position: relative;
-  aspect-ratio: 1 / 1; /* Perfect square; change to 5/6 for taller cards */
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -123,36 +123,27 @@
   transform: scale(1.05);
 }
 
-.category-overlay {
+.category-label {
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.3));
-  backdrop-filter: blur(6px);
-  color: #1a1a1a;
-  text-align: center;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-.category-name {
-  font-family: 'Georgia', serif;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
   font-weight: bold;
-  font-size: 1.25rem;
-  margin-bottom: 0.25rem;
-  color: #1f1f1f;
+  border-radius: 4px;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.shop-now {
-  font-size: 0.85rem;
-  color: #c21830;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-.category-card:hover .category-overlay {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.5));
+@media (max-width: 576px) {
+  .category-label {
+    font-size: 0.85rem;
+    padding: 0.2rem 0.4rem;
+  }
 }
 
 .category-card::after {
@@ -893,10 +884,22 @@ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 
 .footer-link {
   color: #666;
-  transition: color 0.3s;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .footer-link:hover {
-  color: #C1272D; /* Match your red accent */
+  color: #C1272D;
   text-decoration: underline;
+}
+
+.footer h6 {
+  color: #555;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.footer p {
+  font-size: 0.9rem;
+  color: #888;
 }

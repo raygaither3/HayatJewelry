@@ -5,6 +5,8 @@ from website.email_utils import send_reset_email
 from . import db
 from .forms import LoginForm, PasswordChangeForm, ReviewForm, SignUpForm,RequestResetForm, ResetPasswordForm
 from .models import Customer, Product, Review
+from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 
 
 
@@ -16,35 +18,45 @@ auth = Blueprint('auth', __name__)
 def sign_up():
     form = SignUpForm()
     if form.validate_on_submit():
-        email = form.email.data
-        username = form.username.data
+        email = form.email.data.lower().strip()
+        username = form.username.data.strip()
         password1 = form.password1.data
         password2 = form.password2.data
-        phone_number = form.phone_number.data
+        phone_number = form.phone_number.data.strip()
 
-        if password1 == password2:
-            new_customer = Customer()
-            new_customer.email = email
-            new_customer.username = username    
-            new_customer.password = password2
-            new_customer.phone_number = phone_number
+        if password1 != password2:
+            flash("Passwords do not match", category="error")
+            return render_template("sign_up.html", form=form)
 
-            try:
-                db.session.add(new_customer)
-                db.session.commit()
-                flash('Account Created Successfully, You can now Login')
-                return redirect('/login')
-            except Exception as e:
-                db.session.rollback()
-                print("❌ SIGNUP ERROR:", e)
+        new_customer = Customer(
+            email=email,
+            username=username,
+            password=password2,
+            phone_number=phone_number
+        )
+
+        try:
+            db.session.add(new_customer)
+            db.session.commit()
+            flash('Account Created Successfully. You can now log in.', category="success")
+            return redirect('/login')
+
+        except IntegrityError as e:
+            db.session.rollback()
+            if "UNIQUE constraint failed" in str(e.orig):
+                flash("Email or username already exists.", category="error")
+            else:
                 flash(f"Account not created: {str(e)}", category="error")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Unexpected error: {str(e)}", category="error")
 
-            form.email.data = ''
-            form.username.data = ''
-            form.password1.data = ''
-            form.password2.data = ''
-            form.phone_number.data = ''
-            
+        # Clear form fields after failure
+        form.email.data = ''
+        form.username.data = ''
+        form.password1.data = ''
+        form.password2.data = ''
+        form.phone_number.data = ''
         
     return render_template("sign_up.html", form=form)
 
@@ -53,21 +65,20 @@ def sign_up():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        email = form.email.data
+        email = form.email.data.lower().strip()
         password = form.password.data
 
-        customer = Customer.query.filter_by(email=email).first()
+        # Case-insensitive search (optional, only if your DB might have uppercase emails)
+        customer = Customer.query.filter(func.lower(Customer.email) == email).first()
 
-        if customer:
-            if customer.verify_password(password=password):
-                login_user(customer)
-                return redirect('/')  # Redirect to home page after login
-            else:
-                flash('Incorrect Email or Password')
+        if customer and customer.verify_password(password=password):
+            login_user(customer)
+            return redirect('/')  # Redirect to home page after login
 
-        else:
-            flash('Email does not exist')
-            return redirect('sign_up')
+        flash('Incorrect Email or Password')
+        return redirect('/login')
+
+    return render_template("login.html", form=form)
         
 
     return render_template("login.html", form=form)
