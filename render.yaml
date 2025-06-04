@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: hayat-bijoux
+    env: python
+    buildCommand: ""
+    startCommand: "gunicorn main:app"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        value: your-secret-key
+      - key: EMAIL
+        value: your-email@gmail.com
+      - key: MAIL_PASSWORD
+        value: your-app-password
+      - key: DATABASE_URL
+        value: your-database-url (or use SQLite for preview)

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block body %}
+
+<section class="auth-wrapper floral-bg">
+  <div class="auth-container">
+    <h2>Request Password Reset</h2>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      {{ form.email.label }}
+      {{ form.email(class="form-input") }}
+      {{ form.submit(class="btn-submit") }}
+    </form>
+    <p class="form-switch">
+      Remembered your password? <a href="{{ url_for('auth.login') }}">Login</a>
+    </p>
+  </div>
+</section>
+
+{% endblock %}
