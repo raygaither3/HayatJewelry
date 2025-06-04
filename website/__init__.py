@@ -60,6 +60,10 @@ def create_app():
     @app.context_processor
     def inject_search_form():
         return dict(search_form=SearchForm())
+    
+    if os.environ.get("FLASK_ENV") == "production":
+        with app.app_context():
+            db.create_all()
 
     # Optional: create DB in dev mode
     # with app.app_context():
