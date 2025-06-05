@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %} Products {% endblock %}
+{% block title %}
+  {{ selected_category if selected_category else 'All Products' }} | Hayat's Bijoux
+{% endblock %}
 
 {% block body %}
 

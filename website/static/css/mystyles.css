@@ -347,6 +347,21 @@
   pointer-events: none;
   z-index: 0;
 }
+
+@media (max-width: 576px) {
+  .product-header {
+    padding-top: 100px; /* Adjust to clear logo height */
+    text-align: center;
+  }
+
+  .product-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .product-header p.lead {
+    font-size: 1rem;
+  }
+}
   
   
   /* ========== BUTTONS ========== */
@@ -882,24 +897,112 @@ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 
 /* ========== FOOTER ========== */
 
+.footer-custom {
+  background-color: #f8f9fa;
+  font-family: 'Georgia', serif;
+  padding: 3rem 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.footer-heading {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.75rem;
+}
+
 .footer-link {
-  color: #666;
+  color: #555;
   text-decoration: none;
+  display: block;
+  margin-bottom: 0.4rem;
   transition: color 0.3s ease;
+  position: relative;
 }
 
 .footer-link:hover {
-  color: #C1272D;
-  text-decoration: underline;
+  color: #C1272D; /* Your preferred red */
+  text-decoration: none;
 }
 
-.footer h6 {
-  color: #555;
-  margin-bottom: 0.75rem;
-  font-size: 1rem;
+.footer-link:hover::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #C1272D;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
 }
 
+/* Optional: text styling */
 .footer p {
   font-size: 0.9rem;
   color: #888;
 }
+
+/* Responsive Tweaks */
+@media (max-width: 576px) {
+  .footer-custom {
+    text-align: center;
+  }
+
+  .footer-custom .col-md-2,
+  .footer-custom .col-md-3,
+  .footer-custom .col-md-4 {
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-link {
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  .footer-heading {
+    font-size: 1.1rem;
+  }
+}
+
+
+.order-summary,
+.ordered-items {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dark-text {
+  color: #555;
+}
+
+.static-page {
+  color: #333 !important; /* or #555 if you prefer a softer dark */
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.floral-section {
+  background-color: #fdfcfa;
+  background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.content-box {
+  background-color: white;
+  padding: 2rem;
+  max-width: 800px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  color: #333;
+  font-family: 'Georgia', serif;
+}
+

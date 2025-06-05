@@ -18,82 +18,76 @@
 </head>
 
 <body style="background-color: white;">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top rounded shadow-sm px-3 py-2">
+  <nav class="navbar navbar-light bg-light sticky-top shadow-sm px-3 py-2">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">
         <img src="{{ url_for('static', filename='images/hayats-logo-b.png') }}" alt="Hayat's Bijoux" class="navbar-logo">
       </a>
-      
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09"
-        aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarsExample09">
-        <!-- Left Side: Categories -->
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          {% if current_user.is_authenticated and current_user.id == 1 %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('admin.admin_page') }}">Admin Dashboard</a>
-          </li>
-          {% endif %}
-          {% set nav_categories = {
-              'earrings': 'Earrings',
-              'bracelets-rings': 'Bracelets & Rings',
-              'necklace': 'Necklace',
-              'handmades': "Hayat's Handmades"
-          } %}
-          {% if current_user.is_authenticated %}
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            {% if current_user.is_authenticated and current_user.id == 1 %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.admin_page') }}">Admin Dashboard</a>
+            </li>
+            {% endif %}
 
-          {% for slug, name in nav_categories.items() %}
-          <li class="nav-item">
-            <a class="nav-link active" href="{{ url_for('views.products_by_category', slug=slug) }}">{{ name }}</a>
-          </li>
-          {% endfor %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('views.all_products') }}">All Products</a>
-          </li> 
-        </ul>
-          {% endif %}
+            {% if current_user.is_authenticated %}
+              {% for slug, name in {
+                'earrings': 'Earrings',
+                'bracelets-rings': 'Bracelets & Rings',
+                'necklace': 'Necklace',
+                'handmades': "Hayat's Handmades"
+              }.items() %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('views.products_by_category', slug=slug) }}">{{ name }}</a>
+              </li>
+              {% endfor %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('views.all_products') }}">All Products</a>
+              </li>
+            {% endif %}
 
-        <!-- Right Side: Cart, Dropdown, Search -->
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-2">
-          <li class="nav-item">
-            <a href="/cart" class="btn btn-outline-dark position-relative d-flex align-items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
-              </svg>
-              <span>Cart</span>
-          
-              {% if cart | length > 0 %}
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ cart | length }}
-              </span>
-              {% endif %}
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown"
-              aria-expanded="false">Account</a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown09">
-              {% if current_user.is_authenticated %}
+            <li class="nav-item mt-3">
+              <a href="/cart" class="nav-link d-flex align-items-center">
+                <i class="fas fa-shopping-cart me-2"></i> Cart
+                {% if cart | length > 0 %}
+                <span class="badge bg-danger ms-2">{{ cart | length }}</span>
+                {% endif %}
+              </a>
+            </li>
+
+            <li class="nav-item dropdown mt-2">
+              <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+              <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                {% if current_user.is_authenticated %}
                   <li><a class="dropdown-item" href="/profile/{{ current_user.id }}">Profile</a></li>
                   <li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
                   <li><a class="dropdown-item" href="/orders">Orders</a></li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              {% else %}
+                {% else %}
                   <li><a class="dropdown-item" href="/login">Login</a></li>
-              {% endif %}
-            </ul>
-          </li>
-          <li class="nav-item">
-            <form class="d-flex" method="GET" action="{{ url_for('views.search') }}">
-              {{ search_form.hidden_tag() }}
-              {{ search_form.query(class="form-control me-2", placeholder="Search...") }}
-              {{ search_form.submit(class="btn btn-outline-dark") }}
-            </form>
-          </li>
-        </ul>
+                {% endif %}
+              </ul>
+            </li>
+
+            <li class="nav-item mt-3">
+              <form class="d-flex" method="GET" action="{{ url_for('views.search') }}">
+                {{ search_form.hidden_tag() }}
+                {{ search_form.query(class="form-control me-2", placeholder="Search...") }}
+                {{ search_form.submit(class="btn btn-outline-dark") }}
+              </form>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
@@ -118,43 +112,41 @@
   
   {% endblock %}
 <!-- Footer -->
-<footer class="footer bg-light text-dark border-top py-5 mt-5">
+<footer class="footer-custom text-dark py-5 mt-5 border-top">
   <div class="container">
     <div class="row gy-4 justify-content-between">
-      <!-- Logo & Copy -->
-      <div class="col-12 col-md-3 text-center text-md-start">
+      <!-- Logo and Copyright -->
+      <div class="col-12 col-md-4 text-center text-md-start">
         <a href="/" class="d-block mb-2">
           <img src="{{ url_for('static', filename='images/hayats-logo-b.png') }}" alt="Hayat's Bijoux Logo" style="height: 50px; opacity: 0.85;">
         </a>
-        <p class="text-muted mb-0">© 2025 Hayat’s Bijoux</p>
+        <p class="mb-0 small text-muted">&copy; 2025 Hayat’s Bijoux<br>Handcrafted with love.</p>
       </div>
 
-      <!-- Contact Us -->
+      <!-- Links -->
       <div class="col-6 col-md-2">
-        <h6 class="fw-bold">Contact Us</h6>
-        <ul class="list-unstyled">
+        <h6 class="footer-heading">Contact</h6>
+        <ul class="list-unstyled small">
           <li><a href="#" class="footer-link">Phone</a></li>
-          <li><a href="#" class="footer-link">Email</a></li>
+          <a href="mailto:infohayatsbijoux.com" class="footer-link">Email</a>
         </ul>
       </div>
 
-      <!-- Customer Service -->
       <div class="col-6 col-md-3">
-        <h6 class="fw-bold">Customer Service</h6>
-        <ul class="list-unstyled">
-          <li><a href="#" class="footer-link">Shipping & Returns</a></li>
-          <li><a href="#" class="footer-link">About Us</a></li>
-          <li><a href="#" class="footer-link">Reviews</a></li>
+        <h6 class="footer-heading">Customer Service</h6>
+        <ul class="list-unstyled small">
+          <li><a href="{{ url_for('info.shipping_returns') }}" class="footer-link">Shipping & Returns</a></li>
+          <li><a href="{{ url_for('info.about') }}" class="footer-link">About Us</a></li>
+          <li><a href="{{ url_for('info.reviews') }}" class="footer-link">Reviews</a></li>
         </ul>
       </div>
 
-      <!-- Resources -->
       <div class="col-6 col-md-3">
-        <h6 class="fw-bold">Resources</h6>
-        <ul class="list-unstyled">
-          <li><a href="#" class="footer-link">Terms & Conditions</a></li>
-          <li><a href="#" class="footer-link">Privacy Policy</a></li>
-          <li><a href="#" class="footer-link">FAQs</a></li>
+        <h6 class="footer-heading">Resources</h6>
+        <ul class="list-unstyled small">
+          <li><a href="{{ url_for('info.terms') }}" class="footer-link">Terms & Conditions</a></li>
+          <li><a href="{{ url_for('info.privacy') }}" class="footer-link">Privacy Policy</a></li>
+          <li><a href="{{ url_for('info.faqs') }}" class="footer-link">FAQs</a></li>
         </ul>
       </div>
     </div>

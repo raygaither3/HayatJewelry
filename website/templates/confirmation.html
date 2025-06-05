@@ -2,12 +2,14 @@
 {% block title %}Order Confirmation{% endblock %}
 
 {% block body %}
-<section class="auth-wrapper">
-  <div class="auth-container">
-    <h2>Thank You for Your Order!</h2>
-    <p>Your order has been placed successfully. Below are your order details:</p>
+<section class="floral-bg dark-text">
+  <div class="container py-5">
+    <div class="text-center mb-4">
+      <h2>Thank You for Your Order!</h2>
+      <p>Your order has been placed successfully. Below are your order details:</p>
+    </div>
 
-    <div class="order-summary">
+    <div class="order-summary mb-4">
       <h4>Order #{{ order.id }}</h4>
       <p><strong>Name:</strong> {{ order.full_name }}</p>
       <p><strong>Email:</strong> {{ order.customer.email }}</p>
@@ -23,20 +25,18 @@
       <p><strong>Total:</strong> ${{ "%.2f"|format(order.total) }}</p>
     </div>
 
-    <hr>
-
-    <div class="ordered-items">
+    <div class="ordered-items mb-4">
       <h4>Items Ordered:</h4>
       <ul>
         {% for item in order.items %}
-        <li>
-          {{ item.quantity }} x {{ item.product.name }} - ${{ "%.2f"|format(item.price_each * item.quantity) }}
-        </li>
+        <li>{{ item.quantity }} × {{ item.product.name }} – ${{ "%.2f"|format(item.price_each * item.quantity) }}</li>
         {% endfor %}
       </ul>
     </div>
 
-    <a href="{{ url_for('views.home') }}" class="btn-submit" style="margin-top: 2rem;">Return to Home</a>
+    <div class="text-center">
+      <a href="{{ url_for('views.home') }}" class="btn btn-outline-dark">Return to Home</a>
+    </div>
   </div>
 </section>
 {% endblock %}

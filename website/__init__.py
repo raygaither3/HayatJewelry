@@ -6,6 +6,7 @@ from .forms import SearchForm
 from dotenv import load_dotenv
 from .config import DevelopmentConfig, ProductionConfig
 from .extensions import db, mail, csrf, migrate
+from .info_routes import info
 
 load_dotenv()  # Load environment variables from .env
 
@@ -53,6 +54,8 @@ def create_app():
     from .cart_routes import cart_routes
     from .order_routes import order_routes
 
+
+    app.register_blueprint(info)
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(admin, url_prefix='/')
