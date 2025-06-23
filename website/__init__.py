@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from .config import DevelopmentConfig, ProductionConfig
 from .extensions import db, mail, csrf, migrate
 from .info_routes import info
+from .stripe_webhook import stripe_webhook
 
 load_dotenv()  # Load environment variables from .env
 
@@ -61,6 +62,8 @@ def create_app():
     app.register_blueprint(admin, url_prefix='/')
     app.register_blueprint(cart_routes, url_prefix='/')
     app.register_blueprint(order_routes, url_prefix='/')
+    app.register_blueprint(stripe_webhook)
+
 
     @app.context_processor
     def inject_search_form():

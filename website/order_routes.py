@@ -3,12 +3,11 @@ from flask_login import current_user, login_required
 from .models import Cart, Order, OrderItem
 from . import db
 from .forms import CheckoutForm
-
-
+import stripe
+from flask import current_app
 
 
 order_routes = Blueprint('order_routes', __name__)
-
 
 
 @order_routes.route('/cancel_order/<int:order_id>', methods=['POST'])
@@ -35,10 +34,16 @@ def cancel_order(order_id):
 
 
 
+
 @order_routes.route('/checkout', methods=['GET', 'POST'])
 @login_required
 def checkout():
+    stripe.api_key = current_app.config['STRIPE_SECRET_KEY']
     form = CheckoutForm()
+
+    # Always get cart items and total — needed for both GET and POST
+    cart_items = Cart.query.filter_by(customer_id=current_user.id).all()
+    total = sum(item.product.price * item.quantity for item in cart_items) if cart_items else 0
 
     if request.method == 'POST' and form.validate_on_submit():
         # Get form data
@@ -48,48 +53,61 @@ def checkout():
         address = f"{form.address.data}, {form.city.data}, {form.state.data} {form.zip_code.data}, {form.country.data}"
         notes = form.notes.data
 
-        # Get cart items
-        cart_items = Cart.query.filter_by(customer_id=current_user.id).all()
         if not cart_items:
             flash("Your cart is empty.", "warning")
             return redirect(url_for('cart_routes.cart'))
 
-        # Calculate total
-        total = sum(item.product.price * item.quantity for item in cart_items)
-
-        # Create Order
-        new_order = Order(
-            customer_id=current_user.id,
-            full_name=full_name,
-            email=email,
-            phone=phone,
-            shipping_address=address,
-            notes=notes,
-            total=total,
-            status="pending"
-        )
-        db.session.add(new_order)
-        db.session.flush()  # To get order ID
-
-        # Add OrderItems
+        # Create Stripe session
+        line_items = []
         for item in cart_items:
-            order_item = OrderItem(
-            order_id   = new_order.id,
-            product_id = item.product_id,
-            quantity   = item.quantity,
-            price_each = item.product.price,
-            size       = item.size,
-            )
-            db.session.add(order_item)
+            line_items.append({
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': item.product.name,
+                    },
+                    'unit_amount': int(item.product.price * 100),
+                },
+                'quantity': item.quantity,
+            })
 
-        # Clear cart
-        Cart.query.filter_by(customer_id=current_user.id).delete()
+        # Add flat-rate shipping
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': 'USPS Flat Rate Shipping',
+                },
+                'unit_amount': 499,
+            },
+            'quantity': 1,
+        })
 
-        db.session.commit()
-        flash("Order placed successfully!", "success")
-        return redirect(url_for('order_routes.confirmation', order_id=new_order.id))
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            customer_email=email,
+            line_items=line_items,
+            mode='payment',
+            success_url=url_for('order_routes.stripe_success', _external=True),
+            cancel_url=url_for('order_routes.checkout', _external=True),
+            metadata={
+                'user_id': current_user.id,
+                'full_name': full_name,
+                'phone': phone,
+                'address': address,
+                'notes': notes
+            }
+        )
 
-    return render_template('checkout.html', form=form)
+        return redirect(session.url, code=303)
+
+    return render_template('checkout.html', form=form, cart_items=cart_items, total=total)
+
+@order_routes.route('/success')
+@login_required
+def stripe_success():
+    flash("Payment successful! Your order is being processed.", "success")
+    return render_template('success.html')
 
 
 @order_routes.route('/confirmation/<int:order_id>')

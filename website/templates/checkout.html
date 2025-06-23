@@ -8,17 +8,42 @@
       <div class="col-lg-8">
         <div class="card shadow-sm rounded-4 p-4" style="background-color: rgba(255, 255, 255, 0.95);">
           <h2 class="text-center text-danger mb-4">Checkout</h2>
+
+          {% if cart_items %}
+            <h4 class="text-dark mb-3">Your Cart</h4>
+            <ul class="list-group mb-4">
+              {% for item in cart_items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ item.product.product_name }} (x{{ item.quantity }})
+                  <span>${{ '%.2f' % (item.product.price * item.quantity) }}</span>
+                </li>
+              {% endfor %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Subtotal:
+                <span>${{ '%.2f' % total }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Shipping (Flat Rate via USPS):
+                <span>$4.99</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                Grand Total:
+                <span>${{ '%.2f' % (total + 4.99) }}</span>
+              </li>
+            </ul>
+          {% endif %}
+
           <form method="POST">
             {{ form.hidden_tag() }}
 
             <div class="mb-3">
               <label for="full_name" class="form-label">Full Name</label>
-              {{ form.full_name(class="form-control") }}
+              {{ form.full_name(class="form-control", value=current_user.name if current_user.name else "") }}
             </div>
 
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              {{ form.email(class="form-control") }}
+              {{ form.email(class="form-control", value=current_user.email if current_user.email else "") }}
             </div>
 
             <div class="mb-3">
@@ -27,7 +52,6 @@
             </div>
 
             <hr class="my-4">
-
             <h4 class="text-dark mb-3">Shipping Address</h4>
 
             <div class="mb-3">
@@ -65,10 +89,34 @@
             <div class="text-end">
               {{ form.submit(class="btn btn-danger px-4") }}
             </div>
+
+            <div class="text-center mt-3 d-none" id="spinner">
+              <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Processing...</span>
+              </div>
+              <p class="mt-2">Redirecting to Stripe...</p>
+            </div>
+
+            <div class="mb-4">
+              <a href="{{ url_for('cart_routes.show_cart') }}" class="btn btn-outline-secondary">
+                ← Back to Cart
+              </a>
+            </div>
           </form>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  const form = document.querySelector("form");
+  const submitBtn = form.querySelector("button[type='submit']") || form.querySelector("input[type='submit']");
+  const spinner = document.getElementById("spinner");
+
+  form.addEventListener("submit", function () {
+    if (submitBtn) submitBtn.disabled = true;
+    spinner.classList.remove("d-none");
+  });
+</script>
 {% endblock %}

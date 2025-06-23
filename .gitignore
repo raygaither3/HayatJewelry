@@ -57,3 +57,5 @@ build/
 
 # Uploaded images or content
 static/uploads/
+__pycache__/
+*.pyc

@@ -14,14 +14,14 @@
     {{ bootstrap.load_css() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mystyles.css') }}?v={{ config['VERSION'] if config.get('VERSION') else '2' }}">
     <link rel="icon" href="{{ url_for('static', filename='hb_favicon_black_circle.ico') }}" type="image/x-icon">
-    <title>{% block title %}Hayat's Bijoux{% endblock %} | Elegant Moroccan Jewelry</title>
+    <title>{% block title %}Hayat Bijoux{% endblock %} | Elegant Moroccan Jewelry</title>
 </head>
 
 <body style="background-color: white;">
   <nav class="navbar navbar-light bg-light sticky-top shadow-sm px-3 py-2">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">
-        <img src="{{ url_for('static', filename='images/hayats-logo-b.png') }}" alt="Hayat's Bijoux" class="navbar-logo">
+        <img src="{{ url_for('static', filename='images/hayat_logo_bb.png') }}" alt="Hayat's Bijoux" class="navbar-logo">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <span class="navbar-toggler-icon"></span>
@@ -34,34 +34,26 @@
         </div>
         <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            {% if current_user.is_authenticated and current_user.id == 1 %}
+            {% for slug, name in {
+              'earrings': 'Earrings',
+              'bracelets-rings': 'Bracelets & Rings',
+              'necklace': 'Necklace',
+              'handmades': "Hayat's Handmades"
+            }.items() %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('admin.admin_page') }}">Admin Dashboard</a>
+              <a class="nav-link" href="{{ url_for('views.products_by_category', slug=slug) }}">{{ name }}</a>
             </li>
-            {% endif %}
-
-            {% if current_user.is_authenticated %}
-              {% for slug, name in {
-                'earrings': 'Earrings',
-                'bracelets-rings': 'Bracelets & Rings',
-                'necklace': 'Necklace',
-                'handmades': "Hayat's Handmades"
-              }.items() %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('views.products_by_category', slug=slug) }}">{{ name }}</a>
-              </li>
-              {% endfor %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('views.all_products') }}">All Products</a>
-              </li>
-            {% endif %}
+            {% endfor %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('views.all_products') }}">All Products</a>
+            </li>
 
             <li class="nav-item mt-3">
               <a href="/cart" class="nav-link d-flex align-items-center">
                 <i class="fas fa-shopping-cart me-2"></i> Cart
                 {% if cart | length > 0 %}
-                <span class="badge bg-danger ms-2">{{ cart | length }}</span>
-                {% endif %}
+              <span class="badge bg-danger ms-2">{{ cart | length }}</span>
+            {% endif %}
               </a>
             </li>
 
@@ -115,12 +107,18 @@
 <footer class="footer-custom text-dark py-5 mt-5 border-top">
   <div class="container">
     <div class="row gy-4 justify-content-between">
+
+
       <!-- Logo and Copyright -->
-      <div class="col-12 col-md-4 text-center text-md-start">
+      
+      <div class="col-12 col-md-3 text-center text-md-start">
         <a href="/" class="d-block mb-2">
-          <img src="{{ url_for('static', filename='images/hayats-logo-b.png') }}" alt="Hayat's Bijoux Logo" style="height: 50px; opacity: 0.85;">
+          <img src="{{ url_for('static', filename='images/hayat_logo_bb.png') }}" alt="Hayat's Bijoux Logo" style="height: 50px; opacity: 0.85;">
         </a>
-        <p class="mb-0 small text-muted">&copy; 2025 Hayat’s Bijoux<br>Handcrafted with love.</p>
+        <p class="text-muted mb-1">© 2025 Hayat Bijoux</p>
+
+        <!-- RGIII Signature Logo -->
+        <img src="{{ url_for('static', filename='images/rgiii-logo-2.png') }}" alt="RGIII Signature" class="dev-signature-logo">
       </div>
 
       <!-- Links -->
