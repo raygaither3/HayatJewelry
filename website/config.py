@@ -7,7 +7,7 @@ class Config:
     PUBLISHABLE_KEY = os.environ.get("PUBLISHABLE_KEY")
 
     # Email config
-    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_SERVER = 'smtp.zoho.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.getenv('EMAIL')

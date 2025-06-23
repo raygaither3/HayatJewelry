@@ -108,25 +108,20 @@
   <div class="container">
     <div class="row gy-4 justify-content-between">
 
-
       <!-- Logo and Copyright -->
-      
       <div class="col-12 col-md-3 text-center text-md-start">
         <a href="/" class="d-block mb-2">
-          <img src="{{ url_for('static', filename='images/hayat_logo_bb.png') }}" alt="Hayat's Bijoux Logo" style="height: 50px; opacity: 0.85;">
+          <img src="{{ url_for('static', filename='images/hayat_logo_bb.png') }}" alt="Hayat's Bijoux Logo" style="height: 60px; opacity: 0.9;">
         </a>
         <p class="text-muted mb-1">© 2025 Hayat Bijoux</p>
-
-        <!-- RGIII Signature Logo -->
-        <img src="{{ url_for('static', filename='images/rgiii-logo-2.png') }}" alt="RGIII Signature" class="dev-signature-logo">
       </div>
 
       <!-- Links -->
       <div class="col-6 col-md-2">
         <h6 class="footer-heading">Contact</h6>
         <ul class="list-unstyled small">
-          <li><a href="#" class="footer-link">Phone</a></li>
-          <a href="mailto:infohayatsbijoux.com" class="footer-link">Email</a>
+          <li>Phone: (555) 123-4567</li>
+          <li><a href="mailto:info@hayatbijoux.com" class="footer-link">info@hayatbijoux.com</a></li>
         </ul>
       </div>
 
@@ -147,7 +142,17 @@
           <li><a href="{{ url_for('info.faqs') }}" class="footer-link">FAQs</a></li>
         </ul>
       </div>
+
     </div>
+
+    <!-- Developer Credit -->
+    <div class="text-center mt-5 pt-3 border-top">
+      <a href="https://raygaitherportfolio.onrender.com" target="_blank" rel="noopener">
+        <img src="{{ url_for('static', filename='images/rgiii-logo-2.png') }}" alt="Built and Designed by Raymond Gaither III" style="height: 50px; margin-bottom: 10px;">
+      </a>
+      <p class="text-muted small mb-0">Website built and designed by Raymond Gaither III</p>
+    </div>
+
   </div>
 </footer>
 
