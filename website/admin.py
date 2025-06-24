@@ -6,6 +6,8 @@ from werkzeug.utils import secure_filename
 from .models import Customer, Order, OrderItem, Product, ProductImage
 from . import db
 from flask import current_app
+import stripe
+
 
 admin = Blueprint('admin', __name__)
 
@@ -227,6 +229,52 @@ def display_customers():
 
     customers = Customer.query.order_by(Customer.created_at.desc()).all()  # Retrieve all customers
     return render_template('customers.html', customers=customers)
+
+
+@admin.route('/admin/quick-charge', methods=['GET', 'POST'])
+def quick_charge():
+    stripe.api_key = current_app.config['STRIPE_SECRET_KEY']
+    
+    if request.method == 'POST':
+        amount = float(request.form['amount'])
+        product_name = request.form['product_name']
+        email = request.form.get('email')  # Optional field
+
+        try:
+            session_data = {
+                'payment_method_types': ['card'],
+                'mode': 'payment',
+                'line_items': [{
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {'name': product_name},
+                        'unit_amount': int(amount * 100),
+                    },
+                    'quantity': 1,
+                }],
+                'success_url': url_for('admin.charge_success', _external=True),
+                'cancel_url': url_for('admin.charge_cancel', _external=True),
+            }
+
+            if email:
+                session_data['customer_email'] = email
+
+            session = stripe.checkout.Session.create(**session_data)
+            return redirect(session.url, code=303)
+        except Exception as e:
+            flash("Error creating payment session: " + str(e), "danger")
+
+    return render_template('quick_charge.html')
+
+@admin.route('/admin/charge-success')
+def charge_success():
+    flash("✅ Payment successful. Receipt sent to customer.", "success")
+    return redirect(url_for('admin.quick_charge'))
+
+@admin.route('/admin/charge-cancel')
+def charge_cancel():
+    flash("❌ Payment canceled.", "warning")
+    return redirect(url_for('admin.quick_charge'))
 
 
 @admin.route('/admin-page')
