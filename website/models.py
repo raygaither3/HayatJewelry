@@ -95,7 +95,6 @@ class Order(db.Model, TimestampMixin):
     status = db.Column(db.String(100), default='pending', nullable=False)
     payment_id = db.Column(db.String(1000))
     total = db.Column(db.Float, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     items = db.relationship('OrderItem', back_populates='order', cascade="all, delete-orphan", lazy=True)
 
