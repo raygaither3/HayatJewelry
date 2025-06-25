@@ -141,7 +141,7 @@ def stripe_success():
         notes=notes,
         status="Paid",
         total=total,
-        timestamp=datetime.utcnow()
+        
     )
     db.session.add(new_order)
     db.session.flush()
