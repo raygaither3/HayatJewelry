@@ -5,6 +5,7 @@ from . import db
 from .forms import CheckoutForm
 import stripe
 from flask import current_app
+from datetime import datetime
 
 
 order_routes = Blueprint('order_routes', __name__)
@@ -64,7 +65,7 @@ def checkout():
                 'price_data': {
                     'currency': 'usd',
                     'product_data': {
-                        'name': item.product.name,
+                        'name': item.product.product_name,
                     },
                     'unit_amount': int(item.product.price * 100),
                 },
@@ -88,7 +89,7 @@ def checkout():
             customer_email=email,
             line_items=line_items,
             mode='payment',
-            success_url=url_for('order_routes.stripe_success', _external=True),
+            success_url=url_for('order_routes.stripe_success', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=url_for('order_routes.checkout', _external=True),
             metadata={
                 'user_id': current_user.id,
@@ -103,9 +104,67 @@ def checkout():
 
     return render_template('checkout.html', form=form, cart_items=cart_items, total=total)
 
-@order_routes.route('/success')
+@order_routes.route('/checkout/success')
 @login_required
 def stripe_success():
+    session_id = request.args.get('session_id')  # Stripe will send this
+    if not session_id:
+        flash("Missing session ID from Stripe.", "danger")
+        return redirect(url_for('views.home'))
+
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        metadata = session.metadata
+    except Exception as e:
+        flash(f"Could not retrieve payment session: {e}", "danger")
+        return redirect(url_for('views.home'))
+
+    # Get user/cart info
+    user_id = int(metadata['user_id'])
+    full_name = metadata['full_name']
+    phone = metadata['phone']
+    address = metadata['address']
+    notes = metadata.get('notes', '')
+
+    cart_items = Cart.query.filter_by(customer_id=user_id).all()
+    if not cart_items:
+        flash("No items found in cart. Order not created.", "danger")
+        return redirect(url_for('views.home'))
+
+    total = sum(item.product.price * item.quantity for item in cart_items)
+    new_order = Order(
+        customer_id=user_id,
+        full_name=full_name,
+        email=session.customer_email,  # comes from Stripe
+        phone=phone,
+        shipping_address=address,
+        notes=notes,
+        status="Paid",
+        total=total,
+        timestamp=datetime.utcnow()
+    )
+    db.session.add(new_order)
+    db.session.flush()
+
+    for item in cart_items:
+        db.session.add(OrderItem(
+            order_id=new_order.id,
+            product_id=item.product.id,
+            quantity=item.quantity,
+            price_each=item.product.price
+        ))
+        item.product.quantity -= item.quantity
+        db.session.delete(item)
+
+    db.session.commit()
+
+    flash("🎉 Order placed successfully!", "success")
+    return render_template('order_success.html', order=new_order)
+
+
+@order_routes.route('/success')
+@login_required
+def stripe_quick_success():
     flash("Payment successful! Your order is being processed.", "success")
     return render_template('success.html')
 

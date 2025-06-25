@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Order Complete | Hayat's Bijoux{% endblock %}
+
+{% block body %}
+<section class="container text-center py-5">
+  <div class="alert alert-success shadow-sm" role="alert">
+    <h2 class="mb-3">🎉 Thank you for your order!</h2>
+    <p class="lead">Your payment was successful and your order has been placed.</p>
+    <hr>
+    <p class="mb-0">We'll notify you when your items ship. If you have questions, feel free to <a href="/contact">contact us</a>.</p>
+  </div>
+
+  {% if order %}
+  <div class="card shadow-sm mx-auto mt-4" style="max-width: 600px;">
+    <div class="card-body">
+      <h5 class="card-title">Order Summary</h5>
+      <p><strong>Order ID:</strong> {{ order.id }}</p>
+      <p><strong>Total Paid:</strong> ${{ "%.2f"|format(order.total) }}</p>
+      <p><strong>Status:</strong> {{ order.status }}</p>
+      <p><strong>Date:</strong> {{ order.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <a href="{{ url_for('views.all_products') }}" class="btn btn-outline-dark mt-4">Continue Shopping</a>
+</section>
+{% endblock %}
