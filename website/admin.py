@@ -29,12 +29,19 @@ def add_shop_items():
     form = ProductInventoryForm()
     if form.validate_on_submit():
         # Create the product first (without setting the picture yet)
+        selected_category = form.category.data
+        if selected_category in ['Ring', 'Bracelet']:
+            mapped_category = 'Bracelets & Rings'
+        else:
+            mapped_category = selected_category
+
         new_item = Product(
             product_name=form.product_name.data,
             price=form.price.data,
             sale_price=form.sale_price.data,
             description=form.description.data,
-            category=form.category.data,  
+            category=form.category.data,
+            subtype=form.subtype.data if form.subtype.data != 'None' else None,
             quantity=form.quantity.data,
         )
         db.session.add(new_item)

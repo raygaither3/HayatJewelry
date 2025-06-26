@@ -63,6 +63,7 @@ class Product(db.Model, TimestampMixin):
     category = db.Column(db.String(150), nullable=False)
     product_picture = db.Column(db.String(255))
     quantity = db.Column(db.Integer, nullable=False)
+    subtype = db.Column(db.String(100), nullable=True)
 
     images = db.relationship('ProductImage', back_populates='product', cascade="all, delete-orphan")
     order_items = db.relationship('OrderItem', back_populates='product', lazy=True)

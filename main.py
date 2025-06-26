@@ -17,3 +17,4 @@ if os.getenv('FLASK_ENV') == 'production':
 if __name__ == "__main__":
     # Run with debug mode based on environment
     app.run(debug=(os.getenv('FLASK_ENV') != 'production'))
+    # app.run(debug=(os.getenv('FLASK_ENV') != 'developement'))

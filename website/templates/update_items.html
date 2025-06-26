@@ -1,91 +1,86 @@
 {% extends "base.html" %}
-
-{% block title %} Update Product {% endblock %}
+{% block title %}Update Product{% endblock %}
 
 {% block body %}
-<div class="container mt-5 text-dark">
-  <h2 class="mb-4 text-center">Update Product</h2>
-  <form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
+<section class="admin-update-product-section py-5">
+  <div class="container text-dark">
+    <h2 class="text-center mb-4">Update Product</h2>
 
-    <!-- Product Name -->
-    <div class="form-group mb-3">
-      {{ form.product_name.label(class="form-label") }}
-      {{ form.product_name(class="form-control", value=item.product_name) }}
-    </div>
+    <form method="POST" enctype="multipart/form-data" class="product-form">
+      {{ form.hidden_tag() }}
 
-    <!-- Price / Sale Price -->
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group mb-3">
+      <div class="form-grid">
+        <div class="form-group">
+          {{ form.product_name.label(class="form-label") }}
+          {{ form.product_name(class="form-control") }}
+        </div>
+
+        <div class="form-group">
           {{ form.price.label(class="form-label") }}
-          {{ form.price(class="form-control", value=item.price) }}
+          {{ form.price(class="form-control") }}
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="form-group mb-3">
+
+        <div class="form-group">
           {{ form.sale_price.label(class="form-label") }}
-          {{ form.sale_price(class="form-control", value=item.sale_price) }}
+          {{ form.sale_price(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+          {{ form.description.label(class="form-label") }}
+          {{ form.description(class="form-control", rows=4) }}
+        </div>
+
+        <div class="form-group">
+          {{ form.category.label(class="form-label") }}
+          {{ form.category(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+          {{ form.subtype.label(class="form-label") }}
+          {{ form.subtype(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+          {{ form.quantity.label(class="form-label") }}
+          {{ form.quantity(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload New Main Image</label>
+          <input type="file" name="product_picture" class="form-control" accept="image/*">
         </div>
       </div>
-    </div>
 
-    <!-- Description -->
-    <div class="form-group mb-3">
-      {{ form.description.label(class="form-label") }}
-      {{ form.description(class="form-control", rows=4) }}{# WTForms will auto-populate #}
-    </div>
+      <div class="form-actions text-center mt-4">
+        <button type="submit" class="btn btn-danger px-5">Update Product</button>
+      </div>
+    </form>
 
-    <!-- Category -->
-    <div class="form-group mb-3">
-      {{ form.category.label(class="form-label") }}
-      {{ form.category(class="form-control", value=item.category) }}
-    </div>
+    <hr class="my-5">
 
-    <!-- Quantity -->
-    <div class="form-group mb-3">
-      {{ form.quantity.label(class="form-label") }}
-      {{ form.quantity(class="form-control", value=item.quantity) }}
-    </div>
+    <!-- Current Images -->
+    <h4 class="text-center mb-3">Current Images</h4>
+    <div class="row">
+      {% for img in item.images %}
+        <div class="col-sm-6 col-md-3 mb-4">
+          <div class="card border-0 shadow-sm">
+            <img src="{{ url_for('static', filename='uploads/' ~ img.image_url) }}"
+                 alt="Product Image"
+                 class="card-img-top"
+                 style="height: 180px; object-fit: cover;">
 
-    <!-- Upload New Main Image -->
-    <div class="form-group mb-4">
-      <label class="form-label">Upload New Main Image</label>
-      <input type="file" name="product_picture" class="form-control" accept="image/*">
-    </div>
-
-    <div class="text-center mb-5">
-      <button type="submit" class="btn btn-danger">Update Product</button>
-    </div>
-  </form>
-
-  <hr style="border-color: silver;">
-
-  <!-- Current Images Gallery -->
-  <h4 class="mb-3 text-center">Current Images</h4>
-  <div class="row">
-    {% for img in item.images %}
-      <div class="col-md-3 mb-4">
-        <div class="card bg-light text-dark border-danger">
-          <img
-            src="{{ url_for('static', filename='uploads/' ~ img.image_url) }}"
-            class="card-img-top"
-            style="height:150px; object-fit:cover;"
-            alt="Product Image">
-          <div class="card-body p-2 text-center">
-            <form method="POST"
-                  action="{{ url_for('admin.delete_product_image', image_id=img.id) }}">
-              {{ csrf_token() }}
-              <button type="submit" class="btn btn-outline-danger btn-sm">
-                Delete
-              </button>
-            </form>
+            <div class="card-body p-2 text-center">
+              <form method="POST" action="{{ url_for('admin.delete_product_image', image_id=img.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-    {% else %}
-      <p class="text-center text-muted w-100">No images uploaded yet.</p>
-    {% endfor %}
+      {% else %}
+        <p class="text-muted text-center w-100">No images uploaded yet.</p>
+      {% endfor %}
+    </div>
   </div>
-</div>
+</section>
 {% endblock %}

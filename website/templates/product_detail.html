@@ -35,15 +35,15 @@
       <!-- Add to Cart Form -->
       <form action="{{ url_for('cart_routes.add_to_cart', item_id=product.id) }}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        {% if product.category.lower() == 'rings' %}
-        <label for="size" class="form-label">Ring Size</label>
-        <select name="size" id="size" class="form-select w-auto mb-3">
-          {% for s in range(5, 10) %}
-          <option value="{{ s }}">{{ s }}</option>
-          {% endfor %}
-        </select>
+        {% if product.subtype == 'Ring' %}
+          <label for="size" class="form-label">Ring Size</label>
+          <select name="size" id="size" class="form-select w-auto mb-3">
+            {% for s in range(5, 10) %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+          </select>
         {% endif %}
-        <button type="submit" class="btn btn-dark btn-lg w-100 d-flex align-items-center justify-content-center gap-2 animated-btn">
+                <button type="submit" class="btn btn-dark btn-lg w-100 d-flex align-items-center justify-content-center gap-2 animated-btn">
           <i class="fas fa-shopping-cart"></i> Add to Cart
         </button>
       </form>

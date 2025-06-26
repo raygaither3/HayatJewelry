@@ -35,10 +35,17 @@ class ProductInventoryForm(FlaskForm):
     
     category = SelectField('Category', choices=[
         ('Earrings', 'Earrings'),
-        ('Bracelets & Rings', 'Bracelets & Rings'),
+        ('Ring', 'Ring'),
+        ('Bracelet', 'Bracelet'),
         ('Necklace', 'Necklace'),
         ("Hayat's Handmades", "Hayat's Handmades")
     ], validators=[DataRequired()])
+
+    subtype = SelectField('Subtype', choices=[
+        ('None', 'None'),
+        ('Ring', 'Ring'),
+        ('Bracelet', 'Bracelet')
+    ], validators=[Optional()])
     
     quantity = IntegerField('Quantity', validators=[DataRequired()])
     product_images = MultipleFileField('Product Images', validators=[Optional()])
