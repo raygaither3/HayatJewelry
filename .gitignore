@@ -20,9 +20,12 @@ venv/
 instance/
 
 # Alembic migrations (keep if needed for prod; ignore if recreating each time)
-migrations/*
-!migrations/versions/
-!migrations/versions/*.py
+- migrations/*
++ # migrations/*
++ # KEEP migrations and versioned migrations
++ !migrations/
++ !migrations/versions/
++ !migrations/versions/*.py
 
 # Pytest / test outputs
 .pytest_cache/
