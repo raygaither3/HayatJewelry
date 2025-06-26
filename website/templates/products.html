@@ -23,7 +23,7 @@
       <div class="col-6 col-md-3">
         <a href="/product/{{ item.id }}" class="product-link">
           <div class="product-card">
-            <img src="{{ url_for('static', filename='uploads/' + item.product_picture) }}" class="img-fluid" alt="{{ item.product_name }}">
+            <img src="{{ url_for('static', filename='uploads/' + item.product_picture) if item.product_picture else url_for('static', filename='default.jpg') }}" class="img-fluid" alt="{{ item.product_name }}">
             <div class="product-overlay">
               <h5 class="product-name">{{ item.product_name }}</h5>
               <p class="product-price">${{ '%.2f'|format(item.price) }}</p>
